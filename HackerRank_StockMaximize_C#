@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        int T = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < T; i++){
+            int n = Convert.ToInt32(Console.ReadLine());
+            long[] prices = new long[n];
+            string[] values = Console.ReadLine().Split();
+            prices = Array.ConvertAll(values, long.Parse);
+            double result = GetMaxProfit(0, values.Length - 1, prices);
+            Console.WriteLine(result);
+        }
+    }
+    
+    public static double GetMaxProfit(int u, int v, long[] prices){
+        long max = 0;
+        int index = -1;
+        double sum = 0;
+        if(u >= v)
+            return 0;
+        
+        for(int i = u; i <= v; i++){
+            if(prices[i] > max){
+                max = prices[i];
+                index = i;
+            }
+        }
+        for(int j = u; j < index; j++){
+            sum += prices[j];
+        }
+        
+        return (index - u) * prices[index] - sum + GetMaxProfit(index + 1, v, prices);
+    }
+}
