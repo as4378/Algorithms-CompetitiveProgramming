@@ -1,0 +1,38 @@
+//Solution to https://www.hackerrank.com/challenges/max-array-sum
+
+
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+# Complete the maxSubsetSum function below.
+def maxSubsetSum(arr):
+    dp = [num for num in arr]
+    global_max = -100000
+    for i in range(len(arr)):
+        index = len(arr) - i - 1
+        current_num = arr[index]
+        num_2 = (dp[index + 2] + dp[index]) if (index + 2) < len(arr) else dp[index]
+        num_1 = dp[index + 1] if (index + 1) < len(arr) else dp[index]
+        dp[index] = num_1 if num_1 >= num_2 and num_1 >= dp[index] else (num_2 if num_2 >= dp[index] and num_2 >= num_1 else dp[index])
+        global_max = global_max if global_max > dp[index] else dp[index]
+        
+    
+    return global_max
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    n = int(input())
+
+    arr = list(map(int, input().rstrip().split()))
+
+    res = maxSubsetSum(arr)
+
+    fptr.write(str(res) + '\n')
+
+    fptr.close()
