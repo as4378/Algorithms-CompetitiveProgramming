@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        int T = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < T; i++){
+            int N = Convert.ToInt32(Console.ReadLine());
+            string[] values = Console.ReadLine().Split();
+            long[] healths = Array.ConvertAll(values, long.Parse);
+            Array.Sort(healths);
+            long total = healths.Sum();
+            long temp = 0;
+            int count = 0;
+            long max = total;
+            long sum = 0;
+            foreach(int h in healths){
+                count++;
+                temp += h;
+                sum = (total - temp)*(count + 1);
+                if( sum > total){
+                    max = max > sum ? max : sum;
+                }
+            }
+            Console.WriteLine(max);
+        }
+    }
+}
