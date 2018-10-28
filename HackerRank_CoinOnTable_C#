@@ -1,0 +1,97 @@
+//Solution to https://www.hackerrank.com/challenges/coin-on-the-table/problem
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        string[] input = Console.ReadLine().Split();
+        int N = Convert.ToInt32(input[0]);
+        int M = Convert.ToInt32(input[1]);
+        int K = Convert.ToInt32(input[2]);
+        char[][] table = new char[N][];
+        for (int i = 0; i < N; i++)
+        {
+            table[i] = Console.ReadLine().ToArray<char>();
+        }
+        int[,,] dp = new int[N, M, K + 1];
+        for(int i = 0; i < N; i++)
+        {
+            for(int j = 0; j < M; j++)
+            {
+                for(int k = 0; k < K + 1; k++)
+                {
+                    dp[i, j, k] = -2;
+                }
+            }
+        }
+
+        int result = GetMinChanges(0, 0, N, M, K, table, ref dp);
+
+        Console.WriteLine(result);
+    }
+    
+    public static int GetMinChanges(int row, int col, int N, int M, int K, char[][] table, ref int[,,] dp)
+    {
+        if(row < 0 || row >= N || col < 0 || col >= M)
+        {
+            return -1;
+        }
+
+        char c = table[row][col];
+       
+        if (K == 0)
+        {
+            if (c == '*')
+            {
+                dp[row, col, K] = 0;
+            }
+            else
+            {
+                dp[row, col, K] = -1;
+            }
+            return dp[row, col, K];
+        }
+        
+        if( dp[row, col, K] != -2)
+        {
+            return dp[row, col, K];    
+        }
+
+        int left = -1;
+        int right = -1;
+        int up = -1;
+        int down = -1;
+
+        int best = -1;
+        
+        if(c == '*')
+        {
+            dp[row, col, K] = 0;
+            return dp[row, col, K];
+        }
+
+        left = GetMinChanges(row, col - 1, N, M, K - 1, table, ref dp);
+        right = GetMinChanges(row, col + 1, N, M, K - 1, table, ref dp);
+        up = GetMinChanges(row - 1, col, N, M, K - 1, table, ref dp);
+        down = GetMinChanges(row + 1, col, N, M, K - 1, table, ref dp);
+
+        left = left == -1 ? -1 : c == 'L' ? left : left + 1;
+        right = right == -1 ? -1 : c == 'R' ? right : right + 1;
+        up = up == -1 ? -1 : c == 'U' ? up : up + 1;
+        down = down == -1 ? -1 : c == 'D' ? down : down + 1;
+
+        best = left == -1 ? best : best == -1 ? left : left < best ? left : best;
+        best = right == -1 ? best : best == -1 ? right : right < best ? right : best;
+        best = up == -1 ? best : best == -1 ? up : up < best ? up : best;
+        best = down == -1 ? best : best == -1 ? down : down < best ? down : best;
+
+        dp[row, col, K] = best;
+
+        return dp[row, col, K];
+
+    }
+}
