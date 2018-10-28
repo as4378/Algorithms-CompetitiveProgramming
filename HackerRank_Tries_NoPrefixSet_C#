@@ -1,0 +1,50 @@
+//Solution to https://www.hackerrank.com/challenges/no-prefix-set/problem
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+        Trie root = new Trie();
+        root.children = new Dictionary<char, Trie>();
+        bool result = false;
+        string input = string.Empty;
+        for(int i = 0; i < n; i++){
+            input = Console.ReadLine();
+            result = Add(root, input);
+            if(!result){
+                Console.WriteLine("BAD SET");
+                Console.WriteLine(input);
+                return;
+            }
+        }
+        if(result){
+            Console.WriteLine("GOOD SET");
+        }
+    }
+
+    public static bool Add(Trie parent, string input){
+        if(String.IsNullOrEmpty(input)){
+            if(parent.isLeaf)
+                return false;
+            parent.isLeaf = true;
+            return !(parent.children.Count > 0);
+        }
+        if(parent.children.ContainsKey(input[0])){
+            if(parent.isLeaf)
+                return false;
+            return Add(parent.children[input[0]], input.Remove(0, 1));
+        }
+        if(parent.isLeaf)
+            return false;
+        Trie child = new Trie();
+        child.children = new Dictionary<char, Trie>();
+        parent.children.Add(input[0], child);
+        return Add(child, input.Remove(0, 1));
+    }
+}
+public class Trie{
+    public Dictionary<char, Trie> children;
+    public bool isLeaf;
+}
