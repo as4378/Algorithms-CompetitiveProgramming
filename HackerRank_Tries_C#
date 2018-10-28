@@ -1,0 +1,59 @@
+//Solution to https://www.hackerrank.com/challenges/contacts/problem
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+        Contact root = new Contact();
+        root.children = new Dictionary<char, Contact>();
+        int result = 0;
+        for(int i = 0; i < n; i++){
+            string[] input = Console.ReadLine().Split();
+            if(input[0] == "add"){
+                AddChild(root, input[1]);
+            }
+            else{
+                result = FindContactStartingWith(root, input[1]);
+                Console.WriteLine(result);
+            }
+        }
+    }
+
+    public static void AddChild(Contact parent, string name){
+       if(String.IsNullOrEmpty(name)){
+           parent.isLeaf = true;
+           parent.prefixCount++;
+           return;
+       }
+       while(parent.children.ContainsKey(name[0])){
+           parent.prefixCount++; 
+           parent = parent.children[name[0]];
+           name = name.Remove(0, 1);
+       }
+       Contact c = new Contact();
+       c.children = new Dictionary<char, Contact>();
+       parent.children.Add(name[0], c);
+        parent.prefixCount++;
+       AddChild(parent.children[name[0]], name.Remove(0, 1));
+    }
+    
+    public static int FindContactStartingWith(Contact parent, string name) {
+        if(String.IsNullOrEmpty(name)){
+            return parent.prefixCount;
+        }
+        if(parent.children.ContainsKey(name[0])){
+            return FindContactStartingWith(parent.children[name[0]], name.Remove(0, 1));
+        }
+        else{
+            return 0;
+        }
+    }
+   
+}
+public class Contact {
+    public Dictionary<char, Contact> children;
+    public bool isLeaf;
+    public int prefixCount;
+}
