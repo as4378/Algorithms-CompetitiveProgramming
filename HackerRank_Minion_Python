@@ -1,0 +1,23 @@
+//Solution to https://www.hackerrank.com/challenges/the-minion-game/problem
+
+   
+def minion_game(string):
+    sampInp = string
+    mappings = { r : len(sampInp) - r for r in range(0, len(sampInp)) }
+    vowels = ["A", "E", "I", "O", "U"]
+    totalCons = sum([mappings[k] for k in mappings if sampInp[k] not in vowels])
+    totalVow = sum([mappings[k] for k in mappings if sampInp[k] in vowels])
+          
+  
+    if totalCons > totalVow:
+        print("Stuart", totalCons)
+    elif totalVow > totalCons:
+        print("Kevin", totalVow)
+    elif totalVow == totalCons:
+        print("Draw")
+    
+    
+        
+        
+        
+    
