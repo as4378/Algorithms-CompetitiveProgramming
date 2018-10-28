@@ -1,3 +1,5 @@
+//Solution to www.hackerrank.com/challenges/maxsubarray/problem
+
 using System;
 using System.Collections.Generic;
 using System.IO;
