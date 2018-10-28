@@ -1,0 +1,35 @@
+//Solution to 
+
+
+using System;
+using System.Text;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+    static void Main(String[] args) {
+        int N = Convert.ToInt32(Console.ReadLine());
+        string[] input = new string[2];
+        List<Node> list = new List<Node>();
+        for(int i = 0; i < N; i++){
+            input = Console.ReadLine().Split();
+            Node n = new Node();
+            n.value = Convert.ToInt32(input[0]);
+            n.isEmpty = (i + 1) <= (N / 2);
+            n.str = n.isEmpty ? "-" : input[1];
+            list.Add(n);
+        }
+        IEnumerable<Node> list1 = list.OrderBy(e => e.value);
+        StringBuilder output = new StringBuilder();
+        foreach(Node n in list1){
+            output.Append(n.str).Append(" ");
+        }
+        Console.WriteLine(output);
+    }
+}
+
+public class Node{
+    public int value;
+    public string str;
+    public bool isEmpty;
+}
