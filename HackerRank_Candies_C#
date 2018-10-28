@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+class Solution {
+    public static int minCandies = 0;
+    static void Main(String[] args) {
+        int N = Convert.ToInt32(Console.ReadLine());
+        int[] dp = new int[N];
+        List<int> ratings = new List<int>();
+        for(int i = 0; i < N; i++){
+            ratings.Add(Convert.ToInt32(Console.ReadLine()));
+        }
+        double result = 0;
+        bool isSorted = IsSorted(ratings);
+        if(!isSorted){
+            for(int j = 0; j < N; j++){
+                dp[j] = -1;
+            }
+            for(int k = 0; k < N; k++){
+                 GetMinCandies(k, ratings, ref dp);
+            }
+            result = dp.Sum();
+        }
+        else{
+            double n = Convert.ToDouble(N);
+            result = n * (n + 1) / 2;
+        }
+        Console.WriteLine(result);
+    }
+    
+    public static int GetMinCandies(int start, List<int> ratings, ref int[] dp){
+        if(start < 0 || start >= ratings.Count){
+            return 0;
+        }
+        if(dp[start] == -1){
+            if(start == 0){
+                if(ratings[start + 1] >= ratings[start]){
+                    dp[start] = 1;
+                }
+                else{
+                     dp[start] = 1 + GetMinCandies(start + 1, ratings, ref dp);
+                }
+            }
+            else if(start == (ratings.Count - 1)){
+                if(ratings[start - 1] >= ratings[start]){
+                    dp[start] = 1;
+                }
+                else{
+                     dp[start] = 1 + GetMinCandies(start - 1, ratings, ref dp);
+                }
+            }
+            else{
+                if (ratings[start] <= ratings[start - 1] && ratings[start] <= ratings[start + 1])
+                    {
+                        dp[start] = 1;
+                    }
+                    else if (ratings[start] > ratings[start - 1] && ratings[start] <= ratings[start + 1])
+                    {
+                        dp[start] = GetMinCandies(start - 1, ratings, ref dp) + 1;
+                    }
+                    else if (ratings[start] <= ratings[start - 1] && ratings[start] > ratings[start + 1])
+                    {
+                        dp[start] = GetMinCandies(start + 1, ratings, ref dp) + 1;
+                    }
+                    else if(ratings[start] > ratings[start - 1] && ratings[start] > ratings[start + 1])
+                    {
+                        int u = GetMinCandies(start - 1, ratings, ref dp);
+                        int v = GetMinCandies(start + 1, ratings, ref dp);
+                        int max = u > v ? u : v;
+                        dp[start] = max + 1;
+                    }
+            }
+        }
+        
+        return dp[start];
+    }
+    public static bool IsSorted(List<int> sequence){
+        int m = sequence[0];
+        bool increasing = true;
+        bool decreasing = true;
+        for(int i = 1; i < sequence.Count; i++){
+            if(sequence[i] > m){
+                decreasing = false;
+                m = sequence[i];
+                continue;
+            }
+            if(sequence[i] < m){
+                increasing = false;
+                m = sequence[i];
+                continue;
+            }
+            increasing = decreasing = false;
+            break;
+        }
+        
+        return increasing || decreasing;
+    }
+}
