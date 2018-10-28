@@ -1,0 +1,81 @@
+//Solution to https://www.hackerrank.com/challenges/the-grid-search/problem
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        int T = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < T; i++){
+            string[] input = Console.ReadLine().Split();
+            int[] values = Array.ConvertAll(input, int.Parse);
+            List<string> lines = new List<string>();
+            for(int j = 0; j < values[0]; j++){
+                lines.Add(Console.ReadLine());
+            }
+            values = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+            List<string> pattern = new List<string>();
+            for(int j = 0; j < values[0]; j++){
+                pattern.Add(Console.ReadLine());
+            }
+            ProcessInput(lines, pattern, values);
+        }
+            }
+    
+    public static bool GetMatch(string a, string b){
+        return a == b;
+    }
+    public static void ProcessInput(List<string> lines, List<string> pattern, int[] values){
+         List<int> indexes = new List<int>();
+            for(int k = 0; k < lines.Count; k++){
+                string str = lines[k];
+                indexes.AddRange(AllIndexesOf(str, pattern[0]));
+                if(indexes.Count > 0){
+                    foreach(int ind in indexes){
+                        if(ind != -1){
+                            bool isExist = false;
+                            int temp = k;
+                            foreach(string s in pattern){
+                                if(k >= lines.Count){
+                                    Console.WriteLine("NO");
+                                    return;
+                                }
+                                isExist = GetMatch(s, lines[temp++].Substring(ind, values[1]));
+                                if(!isExist)
+                                    break;
+                            }
+                            if(isExist){
+                                Console.WriteLine("YES");
+                                return;
+                            }
+                        }
+                    }
+                }
+                indexes.Clear();
+            }
+            Console.WriteLine("NO");
+    }
+    
+    public static List<int> AllIndexesOf(string str, string value) {
+    if (String.IsNullOrEmpty(value))
+            throw new ArgumentException("the string to find may not be empty", "value");
+        List<int> indexes = new List<int>();
+        int index = 0;
+        int temp = 0;
+        while (index != -1)
+        {
+            string t = str.Substring(index);
+            temp = t.IndexOf(value);
+            if (temp == -1)
+                return indexes;
+            indexes.Add(temp + index);
+            index += temp + 1; 
+        }
+        return indexes;
+}
+        
+    }
+
