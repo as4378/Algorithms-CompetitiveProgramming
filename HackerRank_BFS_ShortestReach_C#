@@ -1,0 +1,55 @@
+//Solution to https://www.hackerrank.com/challenges/bfsshortreach/problem
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    public static int length = 6;
+    static void Main(String[] args) {
+        int q = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < q; i++){
+            string[] input = Console.ReadLine().Split();
+            int[] values = Array.ConvertAll(input, int.Parse);
+            int nodes = values[0];
+            int edges = values[1];
+            int[] distances = new int[nodes];
+            for(int l = 0; l < nodes; l++){
+                distances[l] = -1;
+            }
+            List<int>[] adjacencyList = new List<int>[nodes]; 
+            for(int j = 0; j < edges; j++){
+                values = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+               
+            adjacencyList[values[0] - 1] = adjacencyList[values[0] - 1] == null ? new List<int>() : adjacencyList[values[0] - 1];
+                adjacencyList[values[0] - 1].Add(values[1]);
+            adjacencyList[values[1] - 1] = adjacencyList[values[1] - 1] == null ? new List<int>() : adjacencyList[values[1] - 1];
+                adjacencyList[values[1] - 1].Add(values[0]);
+            }
+            int s = Convert.ToInt32(Console.ReadLine());
+            distances[s - 1] = 0;
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(s);
+            while(queue.Count > 0){
+                int node = queue.Dequeue();
+                 if (adjacencyList[node - 1] != null)
+                {
+                foreach(int n in adjacencyList[node - 1]){
+                    if(n != s){
+                        if(distances[n - 1] < 0){
+                            queue.Enqueue(n);
+                            distances[n - 1] = distances[node - 1] + length;
+                        }
+                    }
+                }
+                 }
+            }
+            for(int k = 0; k < nodes; k++){
+                if(k == s - 1)
+                    continue;
+                Console.Write(distances[k] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+  
+}
