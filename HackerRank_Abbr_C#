@@ -1,0 +1,69 @@
+//Solution to https://www.hackerrank.com/challenges/abbr/problem
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        int q = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < q; i++){
+            string a = Console.ReadLine();
+            string b = Console.ReadLine();
+            bool result = IsConverted(a, b); 
+            if(result){
+                Console.WriteLine("YES");
+            }
+            else{
+                Console.WriteLine("NO");
+            }
+        }
+    
+    }
+    public static bool IsConverted(string a, string b){
+         foreach(char c in a){
+                if(!b.Contains(c.ToString().ToUpper())){
+                    if(char.IsUpper(c)){
+                        return false;
+                    }
+                }
+                if(char.IsUpper(c)){
+                    
+                }
+            }
+        int[,] dp = new int[a.Length, b.Length];
+        int result = IsConversionPossible(0, 0, a, b, ref dp);
+        if(result == 1)
+            return true;
+        else
+            return false;
+    }
+    
+    public static int IsConversionPossible(int startA, int startB, string a, string b, ref int[,] dp){
+        if(startB >= b.Length){
+            if(!a.Substring(startA, a.Length - startA).Any(c => char.IsUpper(c)))
+                return 1;
+            return -1;
+        }
+        if(startA >= a.Length)
+            return -1;
+        if(dp[startA, startB] != 0)
+            return dp[startA, startB];
+        if(a[startA].ToString().ToUpper() == b[startB].ToString()){
+            int t1 = IsConversionPossible(startA + 1, startB + 1, a, b, ref dp);
+            if(t1 == -1){
+                t1 = IsConversionPossible(startA + 1, startB, a, b, ref dp);
+            }
+            dp[startA, startB] = t1;
+        }
+        else{
+            if(char.IsUpper(a[startA])){
+                dp[startA, startB] = -1;
+                return dp[startA, startB];
+            }
+            dp[startA, startB] = IsConversionPossible(startA + 1, startB, a, b, ref dp);
+        }
+        return dp[startA, startB];
+    }
+}
