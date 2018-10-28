@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        int T = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < T; i++){
+            int N = Convert.ToInt32(Console.ReadLine());
+            int[] dp = new int[N + 1];
+            int M = GetAllPatterns(N, ref dp);
+            int primes = GetAllPrimes(M);
+            Console.WriteLine(primes);
+        }
+    }
+    
+    public static int GetAllPatterns(int N, ref int[] dp){
+        if(dp[N] != 0){
+            return dp[N];
+        }
+        if(N < 4){
+            dp[N] = 1;
+            return dp[N];
+        }
+        if(N == 4){
+            dp[N] = 2;
+            return dp[N];
+        }
+        dp[N] = GetAllPatterns(N - 4, ref dp) + GetAllPatterns(N - 1, ref dp);
+        return dp[N];
+    }
+    
+   public static int GetAllPrimes(int n)
+    {
+       bool[] primes = new bool[n + 1];
+       for (int i = 2; i < primes.Length; i++) {
+           primes[i] = true;
+       }
+       int num = 2;
+       while (true) {
+           for (int i = 2;; i++) {
+               int multiple = num * i;
+               if (multiple > n) {
+                   break;
+               } 
+               else {
+                   primes[multiple] = false;
+               }
+           }
+           bool nextNumFound = false;
+           for (int i = num + 1; i < n + 1; i++) {
+               if (primes[i]) {
+                   num = i;
+                   nextNumFound = true;
+                   break;
+               }
+           }
+           if (!nextNumFound) {
+               break;
+           }
+       }
+       return primes.Where(e => e == true).ToList().Count();
+    }
+}
