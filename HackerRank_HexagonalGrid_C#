@@ -1,0 +1,55 @@
+//Solution to https://www.hackerrank.com/challenges/hexagonal-grid/problem
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        int T = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < T; i++){
+            int N = Convert.ToInt32(Console.ReadLine());
+            string a = Console.ReadLine();
+            string b = Console.ReadLine();
+            int[] pos = new int[a.Length];
+            for(int j = 0; j < a.Length; j++){
+                pos[j] = a[j] == '1' ? 1 : 0;
+            }
+            int result = IsFillPossible(0, 0, a, b, pos);
+            Console.WriteLine(result == 1 ? "YES" : "NO");
+        }
+    }
+    
+    public static int IsFillPossible(int startA, int startB, string a, string b, int[] pos){
+        
+        if(startB >= b.Length){
+            for(int i = 0; i < pos.Length; i++){
+                if(pos[i] == 1 || (pos[i] == 0 && (i + 1) < pos.Length && pos[++i] == 0))
+                    continue;
+                return 0;
+            }
+            return 1;
+        }
+        int n = 0;
+        int ne = 0;
+        int e = 0;
+        if(b[startB] == '0'){
+            if((startA <= startB) && (a[startB] == '0')){
+                pos[startB] = 1;
+                n = IsFillPossible(startB + 1, startB + 1, a, b, pos);
+                pos[startB] = 0;
+            }
+            if(n != 1 && (startA <= startB) && (startB + 1 < a.Length) && (a[startB + 1] == '0')){
+                pos[startB + 1] = 1;
+                ne = IsFillPossible(startB + 2, startB + 1, a, b, pos);
+                pos[startB + 1] = 0;
+            }
+            if(ne != 1 && ((startB + 1) < b.Length) && b[startB + 1] == '0'){
+                e = IsFillPossible(startA, startB + 2, a, b, pos);
+            }
+            return n == 1 || ne == 1 || e == 1 ? 1 : 0;
+        }
+        else{
+            return IsFillPossible(startA, startB + 1, a, b, pos);
+        }
+    }
+}
