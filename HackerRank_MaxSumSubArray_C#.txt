@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        int T = Convert.ToInt32(Console.ReadLine());
+            for (int i = 0; i < T; i++)
+            {
+                int N = Convert.ToInt32(Console.ReadLine());
+                string[] values = Console.ReadLine().Split();
+                int[] numbers = Array.ConvertAll(values, int.Parse);
+                int[] dp = new int[numbers.Length];
+                long max = 0;
+                long total = 0;
+                bool visited = false;
+                long totNeg = 0;
+                for (int j = numbers.Length - 1; j >= 0; j--)
+                {
+
+                    dp[j] = ((j + 1) >= numbers.Length) ? numbers[j] : (dp[j + 1] >= 0) ? (numbers[j] + dp[j + 1]) : numbers[j];
+                    //max = dp[j] > max ? dp[j] : max;
+                }
+                max = dp[0];
+                for(int l = 0; l < dp.Length; l++){
+                    if(dp[l] > max){
+                        max = dp[l];
+                    }
+                }
+                for(int k = 0; k < numbers.Length; k++){
+                    if(numbers[k] >= 0){
+                        total += numbers[k];
+                        visited = true;
+                    }
+                    else{
+                        if(!visited){
+                            if(totNeg == 0){
+                                totNeg = numbers[k];
+                            }
+                            else{
+                                if(numbers[k] > totNeg){
+                                    totNeg = numbers[k];
+                                }
+                            }
+                        }
+                    }
+                }
+                if(!visited){
+                    total = totNeg;
+                }
+                Console.WriteLine(max + " "  + total);
+            }
+            
+            
+        }
+    }
