@@ -1,0 +1,14 @@
+//Solution to https://www.hackerrank.com/challenges/battery/problem
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        double timeCharged = Convert.ToDouble(Console.ReadLine());
+        double val = timeCharged * 2;
+        Console.WriteLine(val >= 8.00 ? 8.00 : val);
+    }
+}
