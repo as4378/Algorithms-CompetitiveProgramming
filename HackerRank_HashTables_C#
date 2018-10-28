@@ -1,0 +1,64 @@
+//Solution to https://www.hackerrank.com/challenges/ctci-ice-cream-parlor/problem
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            int m = Convert.ToInt32(Console.ReadLine());
+            int n = Convert.ToInt32(Console.ReadLine());
+            string[] a_temp = Console.ReadLine().Split(' ');
+            int[] a = Array.ConvertAll(a_temp,Int32.Parse);
+            List<Integer> l = new List<Integer>();
+            for(int i = 0; i < n; i++){
+                Integer I = new Integer();
+                I.val = a[i];
+                I.index = i;
+                l.Add(I);
+            }
+            l = l.OrderBy(e => e.val).ToList();
+            Array.Sort(a);
+            int ar = 0;
+            int br = 0;
+            for(int i = 0; i < n; i++){
+                if(a[i] < m){
+                    int temp = GetIndex(a, i + 1, n - 1, m - a[i]);
+                    if(temp != -1){
+                        ar = (l[i].index + 1) > (l[temp].index + 1) ? (l[temp].index + 1) : (l[i].index + 1);
+                        br = (l[i].index + 1) > (l[temp].index + 1) ? (l[i].index + 1): (l[temp].index + 1);
+                        Console.WriteLine(ar + " " + br);
+                        break;
+                    }
+                    
+                }
+            }
+        }
+    }
+    public static int GetIndex(int[] a, int start, int end, int val){
+        int mid = -1;
+        while(true){
+            if(start > end)
+                return -1;
+            if(start == end)
+                return a[start] == val ? start : -1;
+            mid = (start + end) / 2;
+            if(a[mid] == val)
+                return mid;
+            if(a[mid] > val)
+                end = mid - 1;
+            if(a[mid] < val){
+                start = mid + 1;
+            }
+        }
+    }
+}
+
+public class Integer{
+    public int val;
+    public int index;
+}
