@@ -1,0 +1,47 @@
+//Solution to https://www.hackerrank.com/challenges/coin-change/problem
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    public static long Result = 0;
+    static void Main(String[] args) {
+        int[] input = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+            int N = input[0];
+            int M = input[1];
+            int[] coins = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+            long[,] dp = new long[M + 1, N + 1];
+            for (int i = 0; i < M + 1; i++)
+                for (int j = 0; j < N + 1; j++)
+                    dp[i, j] = -1;
+            for(int i = 1; i <= M; i++)
+            {
+                GetWays(coins, N, i, ref dp);
+            }
+            Console.WriteLine(dp[1, N]);
+    }
+    
+    public static long GetWays(int[] coins, int N, int start, ref long[,] dp)
+        {
+            if (N == 0){
+                Result++;
+                return 1;
+            }
+
+            if (dp[start, N] != -1)
+                return dp[start, N];
+
+            long result = 0;
+            for (int i = start; i <= coins.Length; i++)
+            {
+                if (coins[i - 1] <= N)
+                {
+                    result += GetWays(coins, N - coins[i - 1], i, ref dp);
+                }
+            }
+            dp[start, N] = result;
+            return result;
+
+        }
+}
