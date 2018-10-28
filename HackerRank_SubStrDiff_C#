@@ -1,0 +1,97 @@
+//Solution to 
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    
+    static void Main(String[] args) {
+        int T = Convert.ToInt32(Console.ReadLine());
+        for(int i = 0; i < T; i++){
+            string[] input = Console.ReadLine().Split();
+            int S = Convert.ToInt32(input[0]);
+            string a = input[1];
+            string b = input[2];
+            int[,] dp = new int[a.Length, b.Length];
+            int result = GetMaxSubStr(a, b, S);
+            Console.WriteLine(result);
+        }
+    }
+    
+    public static int GetMaxSubStr(string a, string b, int S){
+        if(String.IsNullOrEmpty(a) || String.IsNullOrEmpty(b))
+            return 0;
+        
+        int result = 0;
+        
+        int[,] dp = new int[a.Length, b.Length];
+        int[,] lengths = new int[a.Length, b.Length];
+        int currentLength = 0;
+        for(int i = 0; i < a.Length; i++){
+            for(int j = 0; j < b.Length; j++){
+                dp[i, j] = a[i] == b[j] ? 0 : 1;
+            }
+        }
+        int window = 0;
+        int sum = 0;
+        for (int i = 0; i < a.Length; i++)
+        {
+            int initx = i;
+            int inity = 0;
+            int x = i;
+            int y = 0;
+            while (x < a.Length && y < b.Length)
+            {
+                sum = sum + dp[x, y];
+                if(sum <= S){
+                    window++;
+                    x++;
+                    y++;
+                }
+                else{
+                    sum = sum - dp[initx, inity];
+                    initx++;
+                    inity++;
+                    x++;
+                    y++;
+                }
+            }
+            result = result > window ? result : window;
+            window = 0;
+            sum = 0;
+        }
+        sum = 0;
+        window = 0;
+        for (int i = 0; i < a.Length; i++)
+        {
+            int initx = 0;
+            int inity = i;
+            int x = 0;
+            int y = i;
+            while (x < a.Length && y < b.Length)
+            {
+                sum += dp[x, y];
+                if (sum <= S)
+                {
+                    x++;
+                    y++;
+                    window++;
+                }
+                else
+                {
+                    sum = sum - dp[initx, inity];
+                    y++;
+                    x++;
+                    inity++;
+                    initx++;
+                }
+                
+            }
+            result = result > window ? result : window;
+            window = 0;
+            sum = 0;
+        }
+        return result;
+    }
+}
