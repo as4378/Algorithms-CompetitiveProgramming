@@ -1,0 +1,155 @@
+//Solution to https://www.hackerrank.com/challenges/almost-sorted/problem
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] values = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+        int current = values[0];
+        int min = 0;
+        int count = 0;
+        int index = 0;
+        List<Range> intervals = new List<Range>();
+        for(int i = 1; i < n; i++){
+            if(values[i] < values[i - 1]){
+                current = values[i];
+                Range r = new Range();
+                r.start = i - 1;
+                while(i < n && values[i] <= current){
+                    current = values[i];
+                    i++;
+                }
+                r.end = i - 1;
+                intervals.Add(r);
+            }
+        }
+        foreach(var item in intervals){
+            if((item.end - item.start + 1) > 2){
+                if(intervals.Count != 1){
+                    Console.WriteLine("no");
+                    return;
+                }
+                int start = item.start;
+                int end = item.end;
+                if((values[end] >= (start == 0 ? -1 : values[start - 1]) 
+                    && values[start] <= (end == n - 1 ? values[start] : values[end + 1]))){
+                        Console.WriteLine("yes");
+                        Console.WriteLine("reverse {0} {1}", start + 1, end + 1);
+                        return;
+                }
+                    else{
+                        Console.WriteLine("no");
+                    }
+            }
+            if(((item.end - item.start + 1) == 2) && intervals.Count > 2){
+                Console.WriteLine("no");
+                return;
+            }
+            if(((item.end - item.start + 1) == 2) && intervals.Count == 1){
+                if(item.start == 0 && item.end == n - 1){
+                    Console.WriteLine("yes");
+                    Console.WriteLine("swap {0} {1}", item.start + 1, item.end + 1);
+                    return;
+                }
+                else if(item.start == 0 && item.end < n - 1){
+                    
+                    if(values[item.start] <= values[item.end + 1]){
+                        Console.WriteLine("yes");
+                        Console.WriteLine("swap {0} {1}", item.start + 1, item.end + 1);
+                        return;
+                    }
+                    
+                }
+                else if(item.start > 0 && item.end == n - 1){
+                    if(values[item.start - 1] <= values[item.end]){
+                        Console.WriteLine("yes");
+                        Console.WriteLine("swap {0} {1}", item.start + 1, item.end + 1);
+                        return;
+                    }
+                }
+                else if(values[item.start - 1] <= values[item.end] && values[item.end + 1] >= values[item.start]){
+                    Console.WriteLine("yes");
+                    Console.WriteLine("swap {0} {1}", item.start + 1, item.end + 1);
+                    return;
+                }
+                Console.WriteLine("no");
+                return;
+            }
+            if(((item.end - item.start + 1) == 2) && intervals.Count == 2){
+                Range nextItem = intervals[1];
+                if(item.start == 0 && nextItem.end < n - 1){
+                    if(values[item.start + 1] >= values[nextItem.end] && values[nextItem.end - 1] <= values[item.start]
+                       && values[nextItem.end + 1] >= values[item.start]){
+                       Console.WriteLine("yes");
+                        Console.WriteLine("swap {0} {1}", item.start + 1, nextItem.end + 1);
+                        return;
+                    }
+                    else{
+                        Console.WriteLine("no");
+                        return;
+                    }
+                }
+                if(item.start == 0 && nextItem.end == n - 1){
+                    if(values[item.start + 1] >= values[nextItem.end] && values[nextItem.end - 1] <= values[item.start]){
+                        Console.WriteLine("yes");
+                        Console.WriteLine("swap {0} {1}", item.start + 1, nextItem.end + 1);
+                        return;
+                    }
+                    else{
+                        Console.WriteLine("no");
+                        return;
+                    }
+                }
+                if(item.start > 0 && nextItem.end == n - 1){
+                    if(values[item.start - 1] <= values[nextItem.end] && values[item.start + 1] >= values[nextItem.end]
+                       && values[nextItem.end - 1] <= values[item.start]){
+                        Console.WriteLine("yes");
+                        Console.WriteLine("swap {0} {1}", item.start + 1, nextItem.end + 1);
+                        return;
+                    }
+                     else{
+                        Console.WriteLine("no");
+                        return;
+                    }
+                }
+                if(item.start == 0 && nextItem.end < n - 1){
+                    if(values[item.start + 1] >= values[nextItem.end] && values[nextItem.end - 1] <= values[item.start]
+                       && values[nextItem.end + 1] >= values[item.start]){
+                        Console.WriteLine("yes");
+                        Console.WriteLine("swap {0} {1}", item.start + 1, nextItem.end + 1);
+                        return;
+                    }
+                    else{
+                        Console.WriteLine("no");
+                        return;
+                    }
+                }
+                   if(item.start > 0 && nextItem.end < n - 1){
+                       if(values[item.start - 1] <= values[nextItem.end] && values[item.start + 1] >= values[nextItem.end]
+                          && values[nextItem.end - 1] <= values[item.start] && values[nextItem.end + 1] >= values[item.start]){
+                           Console.WriteLine("yes");
+                        Console.WriteLine("swap {0} {1}", item.start + 1, nextItem.end + 1);
+                        return;
+                       }
+                       else{
+                        Console.WriteLine("no");
+                        return;
+                    }
+                   } 
+                
+                }
+            
+            else{
+                Console.WriteLine("no");
+                return;
+            }
+    }
+}
+}
+public class Range{
+    public int start;
+    public int end;
+}
