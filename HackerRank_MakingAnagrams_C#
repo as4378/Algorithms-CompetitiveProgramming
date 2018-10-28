@@ -1,0 +1,26 @@
+//Solution to https://www.hackerrank.com/challenges/ctci-making-anagrams/problem
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        string a = Console.ReadLine();
+        string b = Console.ReadLine();
+        int[] buffer = new int[26];
+        int temp = 0;
+        foreach(char c in a){
+            buffer[c - 'a']++;
+        }
+        foreach(char c in b){
+            buffer[c - 'a']--;
+        }
+        int result = 0;
+        foreach(int i in buffer){
+            result += Math.Abs(i);
+        }
+        Console.WriteLine(result);
+    }
+}
